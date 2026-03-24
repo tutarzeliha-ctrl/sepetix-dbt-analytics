@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: sepetix_orders
+    description: "Customer orders data"
+    columns:
+      - name: order_id
+        description: "Unique order ID"
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Customer identifier"
+        tests:
+          - not_null
+      - name: status
+        description: "Order status"
+        tests:
+          - accepted_values:
+              values: ['completed', 'pending', 'cancelled']
