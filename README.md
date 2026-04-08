@@ -1,60 +1,93 @@
-\# Sepetix Local dbt Project
+# Sepetix dbt Analytics Project
 
+A data transformation project demonstrating **staging/mart architecture** with dbt and SQLite.
 
+## 🎯 Overview
 
-A data transformation project built with dbt and SQLite.
+This project showcases data engineering best practices: building maintainable data pipelines, implementing data quality tests, and auto-generating documentation. It transforms raw ecommerce data into analysis-ready tables.
 
+## 🏗️ Architecture
 
+**Staging Layer:** Raw data cleaning & standardization
+- Clean data quality issues
+- Standardize naming conventions
+- Cast data types
 
-\## Models
+**Mart Layer:** Business-ready analytics tables
+- Answer specific business questions
+- Join staging models into insights
+- Support dashboards and reports
 
+## 📊 Models
 
+1. **stg_orders** - Customer orders with status tracking
+   - Columns: order_id, customer_id, status, amount
+   - Source: Raw Sepetix orders data
 
-\- \*\*sepetix\_orders\*\*: Customer orders with status tracking
+2. **mart_customer_summary** - Aggregated customer metrics
+3. **mart_order_analysis** - Order performance analysis
+4. **mart_category_insights** - Category-level analytics
+5. **mart_geographic_trends** - Regional patterns
 
-&#x20; - Columns: order\_id, customer\_id, status, amount
+## ✅ Data Quality Testing
 
-&#x20; - Tests: unique, not\_null, accepted\_values
+All 4 tests passing:
+- ✓ order_id is unique (no duplicates)
+- ✓ order_id is not null (completeness)
+- ✓ customer_id is not null (integrity)
+- ✓ status has valid values (domain constraint)
 
+Tests ensure downstream data reliability and prevent silent failures.
 
+## 🛠️ Technology Stack
 
-\## Running the Project
+- **dbt** 1.11.7 - Data transformation framework
+- **SQLite** - Data warehouse
+- **Python** 3.12 - For orchestration & utilities
 
+## 📁 Project Structure
+
+## 🚀 How to Run
+
+1. **Install dependencies**
 ```bash
-
-dbt run
-
-dbt test
-
-dbt docs generate
-
+   pip install dbt-core dbt-sqlite
 ```
 
+2. **Run transformations**
+```bash
+   dbt run
+```
 
+3. **Run data quality tests**
+```bash
+   dbt test
+```
 
-\## Testing
+4. **Generate documentation**
+```bash
+   dbt docs generate
+   dbt docs serve
+```
 
+## 🎓 What I Learned
 
+- **Staging/Mart Separation:** Clean architecture improves maintainability. When requirements change, I only update marts, not staging.
+- **Data Quality Tests:** Critical for reliability. Tests that fail prevent bad data from reaching dashboards.
+- **dbt Best Practices:** ref() for dependencies, source() for raw data, macros for reusability.
+- **Modeling Patterns:** CASE WHEN for business logic, GROUP BY for aggregation, efficient JOINs.
+- **Documentation:** Auto-generated docs reduce manual maintenance and improve team clarity.
 
-All 4 data quality tests pass:
+## 👤 Author
 
-\- ✅ order\_id is unique
+**Zeliha Tutar**  
+Analytics Engineer | Decision Intelligence | SQL • Python • BigQuery  
+📍 Turkey | 🌐 Remote  
 
-\- ✅ order\_id is not null
+**Links:**
+- 🔗 [LinkedIn](https://linkedin.com/in/zelihaturar)
+- 💻 [GitHub](https://github.com/tutarzeliba-ctrl)
 
-\- ✅ customer\_id is not null
+---
 
-\- ✅ status has valid values (completed, pending, cancelled)
-
-
-
-\## Technology Stack
-
-
-
-\- dbt 1.11.7
-
-\- SQLite
-
-\- Python 3.12
-
+**Key Takeaway:** This project demonstrates how data engineering enables better business decisions. Clean data + reliable pipelines + clear documentation = trust.
