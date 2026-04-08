@@ -85,7 +85,7 @@ Analytics Engineer | Decision Intelligence | SQL • Python • BigQuery
 📍 Turkey | 🌐 Remote  
 
 **Links:**
-- 🔗 [LinkedIn](https://linkedin.com/in/zelihaturar)
+- 🔗 [LinkedIn][(https://linkedin.com/in/zelihaturar)](https://www.linkedin.com/in/zeliha-tutar-35a3013aa/)
 - 💻 [GitHub](https://github.com/tutarzeliba-ctrl)
 
 ---
