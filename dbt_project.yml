@@ -1,36 +1,54 @@
 
-# Name your project! Project names should contain only lowercase characters
-# and underscores. A good package name should reflect your organization's
-# name or the intended use of these models
-name: 'sepetix_local'
-version: '1.0.0'
+# ============================================================================
+# SEPETIX ANALYTICS - dBT PROJECT CONFIGURATION
+# ============================================================================
+# Bu dosya dBT projesinin merkezidir. Tüm ayarlar burada yapılır.
 
-# This setting configures which "profile" dbt uses for this project.
-profile: 'sepetix_local'
+name: 'sepetix_analytics'                    # Proje adı
+version: '1.0.0'                             # Versiyon
+config-version: 2                            # dBT config sürümü
 
-# These configurations specify where dbt should look for different types of files.
-# The `model-paths` config, for example, states that models in this project can be
-# found in the "models/" directory. You probably won't need to change these!
-model-paths: ["models"]
-analysis-paths: ["analyses"]
-test-paths: ["tests"]
-seed-paths: ["seeds"]
-macro-paths: ["macros"]
-snapshot-paths: ["snapshots"]
+# ============================================================================
+# PROFILE & DATABASE CONFIGURATION
+# ============================================================================
+profile: 'sepetix'                           # BigQuery profili
 
-clean-targets:         # directories to be removed by `dbt clean`
+# Her model için default davranış
+model-paths: ["models"]                      # Model dosyaları konumu
+analysis-paths: ["analyses"]                 # Ad-hoc analiz konumu
+test-paths: ["tests"]                        # Test dosyaları konumu
+data-paths: ["data"]                         # Seed data konumu
+macro-paths: ["macros"]                      # Makro konumu
+
+target-path: "target"                        # Output klasörü
+clean-targets:
   - "target"
   - "dbt_packages"
 
+# ============================================================================
+# MODEL CONFIGURATION
+# ============================================================================
+# +materialized: table = SQL'i tablo olarak kaydet (verimli)
+# +materialized: view = Sorguda çalıştır (ucuz)
+# +materialized: incremental = Sadece yeni veriler ekle (hızlı)
 
-# Configuring models
-# Full documentation: https://docs.getdbt.com/docs/configuring-models
-
-# In this example config, we tell dbt to build all models in the example/
-# directory as views. These settings can be overridden in the individual model
-# files using the `{{ config(...) }}` macro.
 models:
-  sepetix_local:
-    # Config indicated by + and applies to all files under models/example/
-    example:
+  sepetix_analytics:
+    # STAGING LAYER: Raw datayı temizle ve standartlaştır
+    staging:
       +materialized: view
+      +schema: staging
+      +tags: ["staging"]
+      
+    # MARTS LAYER: Business logic (analiz hazır tablolar)
+    marts:
+      +materialized: table
+      +schema: marts
+      +tags: ["marts"]
+
+# ============================================================================
+# SEEDS (Static Data)
+# ============================================================================
+seeds:
+  sepetix_analytics:
+    +schema: seeds

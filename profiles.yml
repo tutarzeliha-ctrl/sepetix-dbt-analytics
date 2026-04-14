@@ -1,0 +1,20 @@
+
+# ============================================================================
+# dBT PROFILES - DATABASE CONNECTION CONFIGURATION
+# ============================================================================
+# BU DOSYA SENSITIVE (API keys, credentials içerir)!
+# .gitignore'a ekle!
+
+sepetix:
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      project: "project-505e76f5-40a4-4295-b57"
+      dataset: "analytics"                    # dBT'nin çalışacağı dataset
+      threads: 4                              # Parallel thread sayısı
+      timeout_seconds: 300
+      location: "europe-west1"
+      schema_name: "analytics"
+      
+  target: dev

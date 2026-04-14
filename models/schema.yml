@@ -1,20 +1,171 @@
+
+# ============================================================================
+# SCHEMA.YML - MODEL VE COLUMN DOCUMENTATION
+# ============================================================================
+# Amaç: Her modeli, column'u ve relationship'leri dokumente et
+# Fayda: Auto-generated documentation, IDE intellisense
+
 version: 2
 
+# ============================================================================
+# STAGING MODELS
+# ============================================================================
 models:
-  - name: sepetix_orders
-    description: "Customer orders data"
+  - name: stg_orders
+    description: |
+      Sepetix raw orders table'ından temizlenmiş ve standardize edilmiş sipariş verileri.
+      - Geçersiz veri filtrelendi (quantity <= 0, price <= 0)
+      - Status değerleri ingilizce'ye standardize edildi
+      - Calculated column'lar eklendi
     columns:
       - name: order_id
-        description: "Unique order ID"
+        description: Benzersiz sipariş ID
         tests:
           - unique
           - not_null
+      
       - name: customer_id
-        description: "Customer identifier"
+        description: Müşteri ID (Foreign Key)
         tests:
           - not_null
-      - name: status
-        description: "Order status"
+      
+      - name: product_name
+        description: Ürün adı
+      
+      - name: category
+        description: Ürün kategorisi (Elektronik, Giyim, vb.)
+      
+      - name: quantity
+        description: Satın alınan ürün adeti
+        tests:
+          - not_null
+      
+      - name: price
+        description: Birim fiyat (₺)
+        tests:
+          - not_null
+      
+      - name: order_line_amount
+        description: "Satırın toplam değeri (quantity * price)"
+      
+      - name: order_date
+        description: Sipariş tarihi
+      
+      - name: city
+        description: Müşterinin şehri
+      
+      - name: order_status
+        description: "Sipariş durumu (Delivered, Cancelled, Returned, In Transit)"
+
+# ============================================================================
+# MARTS MODELS (FACTS)
+# ============================================================================
+
+  - name: fct_repeat_customers
+    description: |
+      En az 2 kez sipariş veren müşterilerin detaylı analizi.
+      KPI'lar: Repeat purchase rate, LTV, category preferences
+    columns:
+      - name: customer_id
+        description: Müşteri ID
+        tests:
+          - unique
+          - not_null
+      
+      - name: total_orders
+        description: Müşterinin toplam sipariş sayısı
+      
+      - name: total_spent_lira
+        description: Müşterinin toplam harcaması (₺)
+      
+      - name: avg_order_value
+        description: Müşterinin ortalama sipariş değeri (₺)
+      
+      - name: preferred_categories
+        description: "Müşterinin tercih ettiği kategoriler (virgülle ayrılmış)"
+      
+      - name: customer_city
+        description: Müşterinin şehri
+
+  - name: fct_churn_risk
+    description: |
+      Müşterileri inaktivite seviyesine göre risk segment'lerine ayır.
+      Segment'ler: Active, At Risk, Dormant, Churned
+    columns:
+      - name: customer_id
+        description: Müşteri ID
+        tests:
+          - unique
+          - not_null
+      
+      - name: churn_segment
+        description: "Müşterinin churn risk segment'i"
         tests:
           - accepted_values:
-              values: ['completed', 'pending', 'cancelled']
+              values: ['Active', 'At Risk', 'Dormant', 'Churned']
+      
+      - name: days_since_purchase
+        description: Son siparişten bugüne kaç gün geçti
+      
+      - name: lifetime_value
+        description: Müşterinin lifetime value (₺)
+
+  - name: fct_rfm_segmentation
+    description: |
+      RFM (Recency, Frequency, Monetary) analizi ile müşteri segment'leri.
+      Segment'ler: Champions, Loyal, At Risk, Lost, Potential
+    columns:
+      - name: customer_id
+        description: Müşteri ID
+        tests:
+          - unique
+          - not_null
+      
+      - name: rfm_segment
+        description: "Müşterinin RFM segment'i"
+        tests:
+          - accepted_values:
+              values: ['Champions', 'Loyal Customers', 'At Risk', 'Lost Customers', 'Potential Customers', 'Others']
+      
+      - name: recency_score
+        description: "Recency score (1-4, 4=en iyi)"
+      
+      - name: frequency_score
+        description: "Frequency score (1-4, 4=en iyi)"
+      
+      - name: monetary_score
+        description: "Monetary score (1-4, 4=en iyi)"
+      
+      - name: rfm_combined_score
+        description: "3 skorun ortalaması (1-4 scale)"
+
+  - name: fct_cohort_analysis
+    description: |
+      Müşteri cohort'larının (ay bazında gelen müşteri grupları) retention'unu izle.
+      Retention'ı anlama: hangi cohort'lar tekrar alış yapıyor?
+    columns:
+      - name: cohort_month
+        description: "Müşterinin ilk satın alma ayı (YYYY-MM-01)"
+      
+      - name: purchase_month
+        description: "Satın alma ayı (YYYY-MM-01)"
+      
+      - name: months_since_first_purchase
+        description: "İlk satın almadan sonra kaç ay geçti"
+      
+      - name: active_customers
+        description: "O ayda aktif müşteri sayısı"
+      
+      - name: retention_rate_percent
+        description: "Retention rate (ilk ay müşterilerine göre %)"
+
+  - name: fct_product_affinity
+    description: |
+      Hangi ürün kategorilerinin birlikte satıldığını gösteren cross-sell fırsatları.
+      Bundling ve recommendation stratejileri için kullan.
+    columns:
+      - name: category_pair
+        description: "İki kategori kombinasyonu (örn: Elektronik + Giyim)"
+      
+      - name: customer_count
+        description: "Bu kategori çiftini birlikte alan müşteri sayısı"
