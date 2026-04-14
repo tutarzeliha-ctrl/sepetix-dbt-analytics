@@ -1,49 +1,48 @@
-
 # 📊 SEPETIX ANALYTICS - dBT Project
 
-**E-commerce müşteri analizi ve segmentasyonu için production-ready dBT projesi**
+**Production-ready dBT project for e-commerce customer analytics and segmentation**
 
 ---
 
-## 📋 Proje İçeriği
+## 📋 Project Content
 
-Bu dBT projesi, Sepetix e-commerce verilerinden **5 farklı analiz** yapıyor:
+This dBT project performs **5 different analyses** on Sepetix e-commerce data:
 
-### 1️⃣ **Repeat Customers Analizi**
-- Dosya: `models/marts/fct_repeat_customers.sql`
-- Amaç: En az 2 kez sipariş veren müşterileri tanımla
+### 1️⃣ **Repeat Customers Analysis**
+- File: `models/marts/fct_repeat_customers.sql`
+- Purpose: Identify customers with 2+ purchases
 - Output: Customer LTV, category preferences, repeat purchase patterns
 
-### 2️⃣ **Churn Risk Segmentasyonu**
-- Dosya: `models/marts/fct_churn_risk.sql`
-- Amaç: Müşterileri inaktivite seviyesine göre segment'le
-- Segment'ler: Active, At Risk, Dormant, Churned
+### 2️⃣ **Churn Risk Segmentation**
+- File: `models/marts/fct_churn_risk.sql`
+- Purpose: Segment customers by inactivity level
+- Segments: Active, At Risk, Dormant, Churned
 
-### 3️⃣ **RFM Segmentasyonu**
-- Dosya: `models/marts/fct_rfm_segmentation.sql`
-- Amaç: Recency-Frequency-Monetary ile customer value segment'leri
-- Segment'ler: Champions, Loyal, At Risk, Lost, Potential
+### 3️⃣ **RFM Segmentation**
+- File: `models/marts/fct_rfm_segmentation.sql`
+- Purpose: Customer value segmentation using Recency-Frequency-Monetary
+- Segments: Champions, Loyal, At Risk, Lost, Potential
 
 ### 4️⃣ **Cohort Analysis**
-- Dosya: `models/marts/fct_cohort_analysis.sql`
-- Amaç: Müşteri cohort'larının retention'unu izle
+- File: `models/marts/fct_cohort_analysis.sql`
+- Purpose: Track customer cohort retention over time
 - KPI: Month-over-month retention rate
 
 ### 5️⃣ **Product Affinity**
-- Dosya: `models/marts/fct_product_affinity.sql`
-- Amaç: Cross-selling fırsatlarını tanımla (hangi kategoriler beraber satılıyor?)
+- File: `models/marts/fct_product_affinity.sql`
+- Purpose: Identify cross-selling opportunities (which categories sell together)
 - Use Case: "Frequently Bought Together" recommendations
 
 ---
 
-## 🏗️ Proje Yapısı
+## 🏗️ Project Structure
 
 ```
 sepetix_analytics/
 ├── dbt_project.yml          # dBT configuration
 ├── profiles.yml             # Database connection (BigQuery)
-├── .gitignore              # Sensitive files
-├── README.md               # Bu dosya
+├── .gitignore              # Sensitive files exclusion
+├── README.md               # This file
 ├── models/
 │   ├── staging/
 │   │   └── stg_orders.sql       # Raw data cleanup & standardization
@@ -53,9 +52,9 @@ sepetix_analytics/
 │       ├── fct_rfm_segmentation.sql
 │       ├── fct_cohort_analysis.sql
 │       └── fct_product_affinity.sql
-├── tests/                   # (Opsiyonel) Data quality tests
-├── macros/                  # (Opsiyonel) Reusable SQL functions
-└── seeds/                   # (Opsiyonel) Static lookup tables
+├── tests/                   # (Optional) Data quality tests
+├── macros/                  # (Optional) Reusable SQL functions
+└── seeds/                   # (Optional) Static lookup tables
 ```
 
 ---
@@ -73,21 +72,21 @@ gcloud auth application-default login
 ```
 
 ### 3. **Configure profiles.yml**
-- BigQuery project ID'ni `profiles.yml`'de güncelle
-- Dataset adını (default: `analytics`) ayarla
+- Update BigQuery project ID in `profiles.yml`
+- Set dataset name (default: `analytics`)
 
 ### 4. **dBT Run**
 ```bash
-# Tüm models'ı çalıştır (staging + marts)
+# Run all models (staging + marts)
 dbt run
 
-# Sadece marts çalıştır (staging skip)
+# Run only marts (skip staging)
 dbt run --select tag:marts
 
-# Sadece staging çalıştır
+# Run only staging
 dbt run --select tag:staging
 
-# Specific model çalıştır
+# Run specific model
 dbt run --select fct_rfm_segmentation
 ```
 
@@ -116,57 +115,57 @@ stg_orders (VIEW)
 
 ## 🎯 Key Metrics & Business Use Cases
 
-### Repeat Customers (Müşteri Sadakati)
+### Repeat Customers (Customer Loyalty)
 ```sql
 SELECT * FROM fct_repeat_customers
 ORDER BY total_spent_lira DESC
 LIMIT 20;
 ```
-**Kullanım:** VIP müşteri seçimi, loyalty program design
+**Usage:** VIP customer selection, loyalty program design
 
-### Churn Risk (Kayıp Riski)
+### Churn Risk (Loss Prevention)
 ```sql
 SELECT * FROM fct_churn_risk
 WHERE churn_segment IN ('At Risk', 'Dormant')
 ORDER BY days_since_purchase DESC;
 ```
-**Kullanım:** Win-back kampanyaları, retention stratejileri
+**Usage:** Win-back campaigns, retention strategies
 
-### RFM Segments (Müşteri Değeri)
+### RFM Segments (Customer Value)
 ```sql
 SELECT rfm_segment, COUNT(*) as count, AVG(monetary_value) as avg_ltv
 FROM fct_rfm_segmentation
 GROUP BY rfm_segment
 ORDER BY avg_ltv DESC;
 ```
-**Kullanım:** Segment-specific marketing, budget allocation
+**Usage:** Segment-specific marketing, budget allocation
 
-### Cohort Retention (Müşteri Ömrü)
+### Cohort Retention (Customer Lifetime)
 ```sql
 SELECT cohort_month, months_since_first_purchase, retention_rate_percent
 FROM fct_cohort_analysis
 WHERE months_since_first_purchase <= 6
 ORDER BY cohort_month DESC;
 ```
-**Kullanım:** Product-market fit analizi, customer lifecycle planning
+**Usage:** Product-market fit analysis, customer lifecycle planning
 
 ### Product Affinity (Cross-sell)
 ```sql
 SELECT * FROM fct_product_affinity
 ORDER BY customer_count DESC;
 ```
-**Kullanım:** "Frequently Bought Together" recommendations, bundling strategies
+**Usage:** "Frequently Bought Together" recommendations, bundling strategies
 
 ---
 
 ## ✅ Best Practices Implemented
 
 - ✅ **Modular Architecture:** Staging → Marts separation
-- ✅ **Self-Documenting:** schema.yml ile column descriptions
-- ✅ **Data Quality:** NOT NULL ve UNIQUE tests
+- ✅ **Self-Documenting:** schema.yml with column descriptions
+- ✅ **Data Quality:** NOT NULL and UNIQUE tests
 - ✅ **Performance:** Optimal materialization (VIEW vs TABLE)
-- ✅ **Scalability:** CTEs ile reusable logic
-- ✅ **Security:** .gitignore sensitive files
+- ✅ **Scalability:** CTEs for reusable logic
+- ✅ **Security:** .gitignore for sensitive files
 - ✅ **Naming Convention:** fct_ (facts), stg_ (staging), dim_ (dimensions)
 
 ---
@@ -175,10 +174,10 @@ ORDER BY customer_count DESC;
 
 ### Add Tests
 ```bash
-# schema.yml'de tanımlanan testleri çalıştır
+# Run tests defined in schema.yml
 dbt test
 
-# Specific model test
+# Test specific model
 dbt test --select fct_repeat_customers
 ```
 
@@ -192,7 +191,7 @@ dbt run
 ```bash
 dbt docs generate
 dbt docs serve
-# http://127.0.0.1:8000 açılır
+# Opens at http://127.0.0.1:8000
 ```
 
 ---
@@ -200,27 +199,27 @@ dbt docs serve
 ## 📞 Troubleshooting
 
 ### "Permission denied" BigQuery error
-- BigQuery dataset'ine write permission'ı kontrol et
-- `profiles.yml`'deki project ID'yi doğrula
+- Verify write permissions on BigQuery dataset
+- Check project ID in `profiles.yml`
 
-### Models build olmuyorsa
+### Models won't build
 ```bash
-dbt debug  # Bağlantı ve config'i test et
-dbt run --debug  # Detailed log ile çalıştır
+dbt debug  # Test connection and config
+dbt run --debug  # Run with detailed logging
 ```
 
 ### Slow performance
-- `models/marts/*.sql`'deki `materialized='table'` kontrol et
-- BigQuery'de data shuffling'i optimize et (GROUP BY order)
+- Check `materialized='table'` in models/marts/*.sql
+- Optimize BigQuery shuffling (proper GROUP BY order)
 
 ---
 
 ## 🎓 Learning Path
 
-1. **Staging Layer (stg_orders.sql):** Raw data'dan temiz data'ya
+1. **Staging Layer (stg_orders.sql):** Raw data → Clean data
 2. **Repeat Customers (fct_repeat_customers.sql):** GROUP BY, aggregations
 3. **Churn Risk (fct_churn_risk.sql):** CASE WHEN, business logic
-4. **RFM (fct_rfm_segmentation.sql):** NTILE windows functions, segmentation
+4. **RFM (fct_rfm_segmentation.sql):** NTILE window functions, segmentation
 5. **Cohort (fct_cohort_analysis.sql):** Complex joins, retention calculations
 6. **Product Affinity (fct_product_affinity.sql):** ARRAY operations, UNNEST
 
@@ -228,11 +227,11 @@ dbt run --debug  # Detailed log ile çalıştır
 
 ## 📈 Next Steps
 
-- [ ] Implement **incremental models** (sadece yeni veriyi işle)
-- [ ] Add **dbt tests** (data quality checks)
-- [ ] Create **Looker/Tableau dashboard** ile metrics'leri visualize et
-- [ ] Setup **dbt Cloud** ile scheduled runs
-- [ ] Build **macros** ile reusable transformations
+- [ ] Implement **incremental models** (process only new data)
+- [ ] Add **dBT tests** (comprehensive data quality checks)
+- [ ] Create **Looker/Tableau dashboard** for metrics visualization
+- [ ] Setup **dBT Cloud** for scheduled automated runs
+- [ ] Build **macros** for reusable transformations
 
 ---
 
@@ -249,8 +248,8 @@ dbt run --debug  # Detailed log ile çalıştır
 
 **Project:** Sepetix Analytics dBT Project
 **Created:** 2025
-**Purpose:** Analytics Engineer Interview Preparation (May deadline ✅)
-**Focus:** UK/Germany Remote Role
+**Purpose:** Analytics Engineer Interview Preparation
+**Target:** Remote roles in UK/Germany
 
 ---
 
