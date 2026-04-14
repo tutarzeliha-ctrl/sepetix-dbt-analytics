@@ -1,26 +1,25 @@
-
 # ============================================================================
 # SEPETIX ANALYTICS - dBT PROJECT CONFIGURATION
 # ============================================================================
-# Bu dosya dBT projesinin merkezidir. Tüm ayarlar burada yapılır.
+# This file is the heart of the dBT project. All settings configured here.
 
-name: 'sepetix_analytics'                    # Proje adı
-version: '1.0.0'                             # Versiyon
-config-version: 2                            # dBT config sürümü
+name: 'sepetix_analytics'                    # Project name
+version: '1.0.0'                             # Version
+config-version: 2                            # dBT config version
 
 # ============================================================================
 # PROFILE & DATABASE CONFIGURATION
 # ============================================================================
-profile: 'sepetix'                           # BigQuery profili
+profile: 'sepetix'                           # BigQuery profile
 
-# Her model için default davranış
-model-paths: ["models"]                      # Model dosyaları konumu
-analysis-paths: ["analyses"]                 # Ad-hoc analiz konumu
-test-paths: ["tests"]                        # Test dosyaları konumu
-data-paths: ["data"]                         # Seed data konumu
-macro-paths: ["macros"]                      # Makro konumu
+# Default behavior for each model
+model-paths: ["models"]                      # Model file location
+analysis-paths: ["analyses"]                 # Ad-hoc analysis location
+test-paths: ["tests"]                        # Test file location
+data-paths: ["data"]                         # Seed data location
+macro-paths: ["macros"]                      # Macro location
 
-target-path: "target"                        # Output klasörü
+target-path: "target"                        # Output directory
 clean-targets:
   - "target"
   - "dbt_packages"
@@ -28,26 +27,26 @@ clean-targets:
 # ============================================================================
 # MODEL CONFIGURATION
 # ============================================================================
-# +materialized: table = SQL'i tablo olarak kaydet (verimli)
-# +materialized: view = Sorguda çalıştır (ucuz)
-# +materialized: incremental = Sadece yeni veriler ekle (hızlı)
+# +materialized: table = Save SQL as table (efficient for queries)
+# +materialized: view = Execute in query (cost-efficient)
+# +materialized: incremental = Add only new data (fast)
 
 models:
   sepetix_analytics:
-    # STAGING LAYER: Raw datayı temizle ve standartlaştır
+    # STAGING LAYER: Clean and standardize raw data
     staging:
       +materialized: view
       +schema: staging
       +tags: ["staging"]
       
-    # MARTS LAYER: Business logic (analiz hazır tablolar)
+    # MARTS LAYER: Business logic (analysis-ready tables)
     marts:
       +materialized: table
       +schema: marts
       +tags: ["marts"]
 
 # ============================================================================
-# SEEDS (Static Data)
+# SEEDS (Static Reference Data)
 # ============================================================================
 seeds:
   sepetix_analytics:
