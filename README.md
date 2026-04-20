@@ -8,74 +8,73 @@
 
 This dBT project performs **5 different analyses** on Sepetix e-commerce data:
 
-### 1️⃣ **Repeat Customers Analysis**
-- File: `models/marts/fct_repeat_customers.sql`
-- Purpose: Identify customers with 2+ purchases
-- Output: Customer LTV, category preferences, repeat purchase patterns
+### 1️⃣ Repeat Customers Analysis
+- **File:** `models/marts/fct_repeat_customers.sql`
+- **Purpose:** Identify customers with 2+ purchases
+- **Output:** Customer LTV, category preferences, repeat purchase patterns
+- **Key Finding:** 8 repeat customers identified, top customer spent ₺1,698
 
-### 2️⃣ **Churn Risk Segmentation**
-- File: `models/marts/fct_churn_risk.sql`
-- Purpose: Segment customers by inactivity level
-- Segments: Active, At Risk, Dormant, Churned
+### 2️⃣ Churn Risk Segmentation
+- **File:** `models/marts/fct_churn_risk.sql`
+- **Purpose:** Segment customers by inactivity level
+- **Segments:** Active, At Risk, Dormant, Churned
+- **Key Finding:** 62 churned customers, 700+ days inactive
 
-### 3️⃣ **RFM Segmentation**
-- File: `models/marts/fct_rfm_segmentation.sql`
-- Purpose: Customer value segmentation using Recency-Frequency-Monetary
-- Segments: Champions, Loyal, At Risk, Lost, Potential
+### 3️⃣ RFM Segmentation
+- **File:** `models/marts/fct_rfm_segmentation.sql`
+- **Purpose:** Customer value segmentation using Recency-Frequency-Monetary
+- **Segments:** Champions, Loyal, At Risk, Lost, Potential
+- **Key Finding:** 27 Loyal Customers generate 51.4% of total revenue
 
-### 4️⃣ **Cohort Analysis**
-- File: `models/marts/fct_cohort_analysis.sql`
-- Purpose: Track customer cohort retention over time
-- KPI: Month-over-month retention rate
+### 4️⃣ Cohort Analysis
+- **File:** `models/marts/fct_cohort_analysis.sql`
+- **Purpose:** Track customer cohort retention over time
+- **KPI:** Month-over-month retention rate
+- **Key Finding:** January 2024 cohort showed 95% churn after month 1
 
-### 5️⃣ **Product Affinity**
-- File: `models/marts/fct_product_affinity.sql`
-- Purpose: Identify cross-selling opportunities (which categories sell together)
-- Use Case: "Frequently Bought Together" recommendations
+### 5️⃣ Product Affinity
+- **File:** `models/marts/fct_product_affinity.sql`
+- **Purpose:** Identify cross-selling opportunities (which categories sell together)
+- **Use Case:** "Frequently Bought Together" recommendations
 
 ---
 
 ## 🏗️ Project Structure
 
-```
-sepetix_analytics/
+
+sepetix-dbt-analytics/
 ├── dbt_project.yml          # dBT configuration
-├── profiles.yml             # Database connection (BigQuery)
-├── .gitignore              # Sensitive files exclusion
-├── README.md               # This file
+├── .gitignore               # Sensitive files exclusion
+├── README.md                # This file
 ├── models/
 │   ├── staging/
-│   │   └── stg_orders.sql       # Raw data cleanup & standardization
+│   │   └── stg_orders.sql   # Raw data cleanup & standardization
 │   └── marts/
 │       ├── fct_repeat_customers.sql
 │       ├── fct_churn_risk.sql
 │       ├── fct_rfm_segmentation.sql
 │       ├── fct_cohort_analysis.sql
 │       └── fct_product_affinity.sql
-├── tests/                   # (Optional) Data quality tests
-├── macros/                  # (Optional) Reusable SQL functions
-└── seeds/                   # (Optional) Static lookup tables
-```
 
 ---
 
 ## 🚀 Setup & Running
 
-### 1. **Prerequisites**
+### 1. Prerequisites
 ```bash
 pip install dbt-bigquery
 ```
 
-### 2. **BigQuery Authentication**
+### 2. BigQuery Authentication
 ```bash
 gcloud auth application-default login
 ```
 
-### 3. **Configure profiles.yml**
-- Update BigQuery project ID in `profiles.yml`
+### 3. Configure profiles.yml
+- Update BigQuery project ID in `profiles.yml` (not included in repo for security)
 - Set dataset name (default: `analytics`)
 
-### 4. **dBT Run**
+### 4. dBT Run
 ```bash
 # Run all models (staging + marts)
 dbt run
@@ -90,7 +89,7 @@ dbt run --select tag:staging
 dbt run --select fct_rfm_segmentation
 ```
 
-### 5. **Documentation Generate**
+### 5. Documentation Generate
 ```bash
 dbt docs generate
 dbt docs serve
@@ -101,15 +100,14 @@ dbt docs serve
 ## 📊 Models & Data Lineage
 
 ### DAG (Directed Acyclic Graph)
-```
+
 stg_orders (VIEW)
-    ↓
-    ├→ fct_repeat_customers (TABLE)
-    ├→ fct_churn_risk (TABLE)
-    ├→ fct_rfm_segmentation (TABLE)
-    ├→ fct_cohort_analysis (TABLE)
-    └→ fct_product_affinity (TABLE)
-```
+↓
+├── fct_repeat_customers (TABLE)
+├── fct_churn_risk (TABLE)
+├── fct_rfm_segmentation (TABLE)
+├── fct_cohort_analysis (TABLE)
+└── fct_product_affinity (TABLE)
 
 ---
 
@@ -191,25 +189,25 @@ dbt run
 ```bash
 dbt docs generate
 dbt docs serve
-# Opens at http://127.0.0.1:8000
+# Opens at http://127.0.0.1:8080
 ```
 
 ---
 
-## 📞 Troubleshooting
+## 🩺 Troubleshooting
 
 ### "Permission denied" BigQuery error
 - Verify write permissions on BigQuery dataset
-- Check project ID in `profiles.yml`
+- Check project ID in your local `profiles.yml`
 
 ### Models won't build
 ```bash
-dbt debug  # Test connection and config
+dbt debug   # Test connection and config
 dbt run --debug  # Run with detailed logging
 ```
 
 ### Slow performance
-- Check `materialized='table'` in models/marts/*.sql
+- Check `materialized='table'` in `models/marts/*.sql`
 - Optimize BigQuery shuffling (proper GROUP BY order)
 
 ---
@@ -235,22 +233,16 @@ dbt run --debug  # Run with detailed logging
 
 ---
 
-## 📚 Resources
+## 👩‍💻 Author & Contact
 
-- [dBT Documentation](https://docs.getdbt.com)
-- [BigQuery Best Practices](https://cloud.google.com/bigquery/docs/best-practices)
-- [RFM Analysis Guide](https://www.optimizesmart.com/rfm-analysis/)
-- [Cohort Analysis Guide](https://blog.amplitude.com/understanding-cohort-analysis)
-
----
-
-## 👨‍💼 Author & Contact
-
-**Project:** Sepetix Analytics dBT Project
+**Author:** Zeliha Tutar
+**LinkedIn:** [linkedin.com/in/zeliha-tutar-35a3013aa](https://linkedin.com/in/zeliha-tutar-35a3013aa)
 **Created:** 2025
-**Purpose:** Analytics Engineer Interview Preparation
+**Purpose:** Analytics Engineer Portfolio Project
 **Target:** Remote roles in UK/Germany
 
 ---
 
-**Happy Analyzing! 🚀**
+*Happy Analyzing!* 🎉
+
+
