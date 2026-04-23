@@ -6,7 +6,7 @@
 
 ## 📋 Project Content
 
-This dBT project performs **5 different analyses** on Sepetix e-commerce data:
+This dBT project performs **6 different analyses** on Sepetix e-commerce data:
 
 ### 1️⃣ Repeat Customers Analysis
 - **File:** `models/marts/fct_repeat_customers.sql`
@@ -37,6 +37,12 @@ This dBT project performs **5 different analyses** on Sepetix e-commerce data:
 - **Purpose:** Identify cross-selling opportunities (which categories sell together)
 - **Use Case:** "Frequently Bought Together" recommendations
 
+### 6️⃣ Incremental Orders Pipeline
+
+- **File:** `models/marts/fct_orders_incremental.sql`
+- **Purpose:** Process only new orders on each run — production-ready pipeline
+- **Materialization:** Incremental (appends new rows only)
+- **Key Achievement:** Connected dbt Core to BigQuery via OAuth, 135 rows processed, 4/4 data quality tests passed
 ---
 
 ## 🏗️ Project Structure
@@ -225,8 +231,8 @@ dbt run --debug  # Run with detailed logging
 
 ## 📈 Next Steps
 
-- [ ] Implement **incremental models** (process only new data)
-- [ ] Add **dBT tests** (comprehensive data quality checks)
+- [x] Implement **incremental models** (process only new data) ✅
+- [x] Add **dBT tests** (comprehensive data quality checks) ✅
 - [ ] Create **Looker/Tableau dashboard** for metrics visualization
 - [ ] Setup **dBT Cloud** for scheduled automated runs
 - [ ] Build **macros** for reusable transformations
@@ -237,7 +243,7 @@ dbt run --debug  # Run with detailed logging
 
 **Author:** Zeliha Tutar
 **LinkedIn:** [linkedin.com/in/zeliha-tutar-35a3013aa](https://linkedin.com/in/zeliha-tutar-35a3013aa)
-**Created:** 2025
+**Created:** 2026
 **Purpose:** Analytics Engineer Portfolio Project
 **Target:** Remote roles in UK/Germany
 
