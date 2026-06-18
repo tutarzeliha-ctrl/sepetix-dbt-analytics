@@ -228,6 +228,23 @@ dbt run --debug  # Run with detailed logging
 6. **Product Affinity (fct_product_affinity.sql):** ARRAY operations, UNNEST
 
 ---
+## 🛠️ Tech Stack Beyond dbt
+
+While this repository showcases the dbt pipeline, my broader Analytics Engineering toolkit includes:
+
+| Tool | What I Use It For |
+|------|-------------------|
+| **Apache Airflow** | Orchestrating multi-step ETL pipelines with task dependencies (DAGs) |
+| **Apache Kafka** | Producer/consumer patterns for real-time event streaming |
+| **Apache Spark** | Distributed data processing — transformations, aggregations, window functions on large datasets |
+| **Databricks & Delta Lake** | ACID-compliant data lake operations, Time Travel for data recovery |
+| **Snowflake** | Virtual Warehouse management, Time Travel, cloud data warehousing |
+| **Docker** | Containerizing data pipeline environments (Airflow + Postgres setup) |
+| **AWS (S3, Redshift, Lambda)** | Object storage, cloud data warehousing, event-driven serverless functions |
+
+These skills complement the BigQuery + dbt stack shown in this repo, giving me a well-rounded foundation across the modern data stack — from ingestion (Kafka, Airflow) to storage (S3, Delta Lake) to transformation (Spark, dbt) to warehousing (BigQuery, Snowflake, Redshift).
+
+---
 
 ## 📈 Next Steps
 
